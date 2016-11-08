@@ -11,7 +11,7 @@ csv_file = "my_csv.csv"
 # Parameters for MySQL
 host = "localhost"
 user = "root"
-passwd = "Acaciadragoons"
+passwd = "insert_your_passwd_here"
 database = "python_mysql_test"
 
 
