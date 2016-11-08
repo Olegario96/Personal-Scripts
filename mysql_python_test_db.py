@@ -1,8 +1,9 @@
+
 import MySQLdb
 import os
 import csv
 
-program_explain = "We gonna try some tests with" 
+program_explain = "We gonna try some tests with"
 program_explain += " MySQL, using Python to 'transform' .csv into a database."
 # Our .csv file
 csv_file = "my_csv.csv"
@@ -10,14 +11,14 @@ csv_file = "my_csv.csv"
 # Parameters for MySQL
 host = "localhost"
 user = "root"
-passwd = "your_password_here"
+passwd = "Acaciadragoons"
 database = "python_mysql_test"
 
 
 # Command to create a specific table
 table = """ CREATE TABLE IF NOT EXISTS Pearson (
 				name VARCHAR(30) NOT NULL,
-				height SMALLINT NOT NULL,
+				height DECIMAL(3,2) NOT NULL,
 				university VARCHAR(8),
 				work SMALLINT
 				) """
@@ -30,8 +31,8 @@ table = """ CREATE TABLE IF NOT EXISTS Pearson (
 ##
 def create_and_prepare_csv_file():
 	print "Creating the .csv file"
-		
-	csv_file = open("my_csv.csv", 'r+b')
+
+	csv_file = open("my_csv.csv", 'w+')
 
 	return csv_file
 
@@ -48,7 +49,7 @@ def create_and_prepare_csv_file():
 ##
 def fill_csv_file_with_some_shit(csv_file):
 	csv_writer = csv.writer(csv_file, delimiter = ',', quotechar = '|')
-	
+
 	print "Writing the 'header' on csv file"
 
 	csv_writer.writerow(["Name", "Height", "University", "Work"])
@@ -60,6 +61,7 @@ def fill_csv_file_with_some_shit(csv_file):
 
 	for line in students:
 		csv_writer.writerow(line)
+		csv_file.flush()
 
 	print "The data was successfully written!"
 
@@ -70,7 +72,7 @@ def fill_csv_file_with_some_shit(csv_file):
 ## 			   and then, skip the first line (here we assume that the csv
 ## 			   is arranged like a SQL table. Also, we consider the first
 ## 			   line as the 'header'). Then, for each line in our csv
-## 			   we update de command 'INSERT INTO' and finally we 
+## 			   we update de command 'INSERT INTO' and finally we
 ## 			   write in our database using as parameter our row.
 ##
 ## @param      cursor    The cursor which will write on our database.
@@ -79,13 +81,14 @@ def fill_csv_file_with_some_shit(csv_file):
 ## @return     This is a void function
 ##
 def csv_to_mysql(cursor, csv_file):
+	csv_file.seek(0)
 	csv_reader = csv.reader(csv_file, delimiter = ',', quotechar = '|')
 	csv_reader.next()
 
 	print "\nStarting to transfer content from csv file to MySQL.\n"
 
 	for row in csv_reader:
-		insert = """INSERT INTO Pearson 
+		insert = """INSERT INTO Pearson
 					VALUES (%s, %s, %s, %s) """
 
 		cursor.execute(insert, (row[0], row[1], row[2], row[3]))
@@ -97,8 +100,8 @@ print program_explain
 # Creates the file if doesn't exists
 if not os.path.exists(csv_file):
 	csv_file = create_and_prepare_csv_file()
-else: 
-	csv_file = csv_file = open(csv_file, 'r+b')
+else:
+	csv_file = csv_file = open(csv_file, 'w+')
 
 print "Filling the csv file with some data"
 
@@ -106,8 +109,18 @@ fill_csv_file_with_some_shit(csv_file)
 
 print "Now we will prepare our database"
 
-db = MySQLdb.connect(host, user, passwd, database)
+db = MySQLdb.connect(host, user, passwd)
 cursor = db.cursor()
+
+create_database = """CREATE DATABASE IF NOT EXISTS %s;"""
+create_database = create_database % (database)
+
+cursor.execute(create_database)
+
+use_database = """USE %s;"""
+use_database = use_database % (database)
+
+cursor.execute(use_database)
 
 print "Using " + database + " database"
 
