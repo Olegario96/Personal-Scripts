@@ -1,12 +1,27 @@
 import csv
 
+# Total lines of the .csv
 number_lines_complete = 0
-number_lines_missing = 0
+# Rows to be written at the end
 missing_index = []
 
+
+##
+## @brief      We use this function to search every element of de csv_missing
+## 			   on the csv_complete file. For do this, we use a binary search
+## 			   to accelarate the process. We skip the first line, because
+## 			   the first line of complete file is like a 'header'. We
+## 			   transform our csv into a list, so this can be done more
+## 			   easily.
+##
+## @param      csv_complete  The complete csv with all information
+## @param      csv_missing   The csv with the missing data to be searched on the
+## 							 csv_complete
+##
+## @return     This is a void function
+##
 def search_for_index(csv_complete, csv_missing):
 	global number_lines_complete
-	global number_lines_missing
 
 	csv_complete.seek(0)
 	csv_missing.seek(0)
@@ -23,6 +38,17 @@ def search_for_index(csv_complete, csv_missing):
 		index = binary_search(list_complete, row[0])
 		missing_index.append(index)
 
+
+##
+## @brief      A normal binary search that returns the element. The
+## 			   complexity is O(n). If you have doubts what is binary search,
+## 			   google it ;).
+##
+## @param      collection  The collection that will be investigated
+## @param      item        The item to be searched
+##
+## @return     Return the element found
+##
 def binary_search(collection, item):
 	global number_lines_complete
 
@@ -47,6 +73,15 @@ def binary_search(collection, item):
 
 	return collection[midpoint]
 
+
+##
+## @brief      We just write every element on the list in a csv file
+## 			   called "csv_padron"
+##
+## @param      missing_index  The missing index to be written in the csv
+##
+## @return     This is a void function
+##
 def list_to_csv(missing_index):
 	csv_padron = open("csv_padron.csv", 'w')
 	wr = wr = csv.writer(csv_padron, delimiter=',', quotechar='|')
