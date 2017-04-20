@@ -41,7 +41,7 @@ def search_for_index(csv_complete, csv_missing):
 
 ##
 ## @brief      A normal binary search that returns the element. The
-## 			   complexity is O(n). If you have doubts what is binary search,
+## 			   complexity is O(logn). If you have doubts what is binary search,
 ## 			   google it ;).
 ##
 ## @param      collection  The collection that will be investigated
