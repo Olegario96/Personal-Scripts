@@ -30,7 +30,6 @@ def searchForIndex(csvComplete, csvMissing):
 		index = binarySearch(listComplete, row[0], numberLinesComplete)
 		missinIndex.append(index)
 
-
 ##
 ## @brief      A normal binary search that returns the element. The
 ## 			   complexity is O(logn). If you have doubts what is binary search,
@@ -61,7 +60,6 @@ def binarySearch(collection, item, numberLinesComplete):
 
 	return collection[midpoint]
 
-
 ##
 ## @brief      We just write every element on the list in a csv file
 ## 			   called "csvPadron"
@@ -75,7 +73,7 @@ def listToCsv(missinIndex):
 	wr = wr = csv.writer(csvPadron, delimiter=',', quotechar='|')
 	for row in missinIndex:
 		wr.writerow(row)
-
+		
 if __name__ == '__main__':
 	# Total lines of the .csv
 	numberLinesComplete = 0
