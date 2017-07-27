@@ -264,8 +264,10 @@ def writeChillers(case):
 	for row in csvReader:
 		if not firstTime:
 			for index in indexes:
-				newRow.append(row[index])
-			csvWriter.writerow(newRow)
+				if int(float(row[20])) == 1:
+					newRow.append(row[index])
+			if newRow:
+				csvWriter.writerow(newRow)
 			newRow = []
 		else:
 			for column in row:
