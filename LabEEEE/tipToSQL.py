@@ -63,7 +63,7 @@ def fixCsvConf(pathToAllCsv):
 					else:
 						csvWriter.writerow(row)
 						firstTime = False
-
+				csvFile.close()
 				firstTime = True
 
 ##
@@ -100,15 +100,28 @@ def writeNewValues(pathToAllCsv):
 						newRow = (aux + (aux[2:]) * 2 + ['Consumo', 'PHoras'])
 
 					csvWriter.writerow(newRow)
-
+				newCsvFile.close()
+				csvFile.close()
 				firstTime = True
 
 ##
-## @brief      { function_description }
+## @brief      This function is responsible for create the query and insert all
+##             the data into the database. First, it connects with the
+##             'resultadoAnaliseNBR' DB. Then, for each path will list the
+##             files and get the current city. Next, evaluates which type csv we
+##             dealing (i.e. heating, cooling or confort). After that, uses
+##             the function 'createsQuery' to create the query indicating
+##             in which table will be used. Finally, open the csv file using
+##             the csv reader and insert all the data in the query
+##             using a tuple. Then the cursor execute the query for all
+##             rows. At the end, just commit the changes and closes the file.
+##             The number of the tipology is obtained from the name of the file.
 ##
-## @param      pathToAllCsv  The path to all csv
+## @param      pathToAllCsv  The path to all csv obtained from the function
+##                           'pathToAllCsv'. See its documentation for more
+##                           info.
 ##
-## @return     This is a void funtciont.
+## @return     This is a void function.
 ##
 def setupQueryAndInsert(pathToAllCsv):
 	conn = sqlite3.connect('resultadoAnaliseNBR.db')
@@ -137,6 +150,7 @@ def setupQueryAndInsert(pathToAllCsv):
 				finalQuery = query % (tuple(params))
 				cursor.execute(finalQuery)
 
+			csvFile.close()
 	conn.commit()
 	conn.close()
 
