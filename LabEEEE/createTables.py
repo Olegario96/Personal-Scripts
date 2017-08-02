@@ -1,5 +1,40 @@
 import sqlite3
 
+tableCharacteristics = """CREATE TABLE IF NOT EXISTS caracteristicas (
+								tipologia   INTEGER,
+								caso        VARCHAR(8),
+								ambiente    VARCHAR(12),
+								amb         INTEGER,
+								uParExt     REAL,
+								ctParExt    REAL,
+								expCob      REAL,
+								uCob        REAL,
+								ctCob       REAL,
+								expPis      REAL,
+								uPisExt     REAL,
+								ctPisExt    REAL,
+								uvid        REAL,
+								fSvid       REAL,
+								fatVen      REAL,
+								absPar      REAL,
+								absCob      REAL,
+								uParInt     REAL,
+								ctParInt    REAL,
+								somb        REAL,
+								ventCruz    REAL,
+								areaUtil    REAL,
+								aParInt     REAL,
+								parExtN     REAL,
+								parExtS     REAL,
+								parExtL     REAL,
+								parExtO     REAL,
+								aVaoN       REAL,
+								aVaoS       REAL,
+								aVaoL       REAL,
+								aVaoO       REAL,
+								PRIMARY KEY(tipologia, caso, ambiente)
+							);"""
+
 tableHeating = """CREATE TABLE IF NOT EXISTS aquecimento (
 						clima       VARCHAR(15),
 						tipologia   INTEGER,
@@ -18,6 +53,7 @@ tableHeating = """CREATE TABLE IF NOT EXISTS aquecimento (
 						november    REAL,
 						december    REAL,
 						anual       REAL,
+						FOREIGN KEY(tipologia, caso, amb) REFERENCES caracteristicas(tipologia, caso, ambiente)
 						FOREIGN KEY(clima, tipologia, caso, amb) REFERENCES resfriamento(clima, tipologia, caso, amb)
 						FOREIGN KEY(clima, tipologia, caso, amb) REFERENCES conforto(clima, tipologia, caso, amb)
 						PRIMARY KEY(clima, tipologia, caso, amb)
@@ -41,6 +77,7 @@ tableCooling = """CREATE TABLE IF NOT EXISTS resfriamento (
 						november    REAL,
 						december    REAL,
 						anual       REAL,
+						FOREIGN KEY(tipologia, caso, amb) REFERENCES caracteristicas(tipologia, caso, ambiente)
 						FOREIGN KEY(clima, tipologia, caso, amb) REFERENCES aquecimento(clima, tipologia, caso, amb)
 						FOREIGN KEY(clima, tipologia, caso, amb) REFERENCES conforto(clima, tipologia, caso, amb)
 						PRIMARY KEY(clima, tipologia, caso, amb)
@@ -92,15 +129,17 @@ tableConf = """CREATE TABLE IF NOT EXISTS conforto (
 						anual3       REAL,
 						consumo      REAL,
 						phoras       REAL,
+						FOREIGN KEY(tipologia, caso, amb) REFERENCES caracteristicas(tipologia, caso, ambiente)
 						FOREIGN KEY(clima, tipologia, caso, amb) REFERENCES aquecimento(clima, tipologia, caso, amb)
 						FOREIGN KEY(clima, tipologia, caso, amb) REFERENCES resfriamento(clima, tipologia, caso, amb)
 						PRIMARY KEY(clima, tipologia, caso, amb)
 						);"""
 
 if __name__ == '__main__':
-	conn = sqlite3.connect('resultadoAnaliseNBR.db')
+	conn = sqlite3.connect('../resultadoAnaliseNBR.db')
 	cursor = conn.cursor()
 
+	cursor.execute(tableCharacteristics)
 	cursor.execute(tableHeating)
 	cursor.execute(tableCooling)
 	cursor.execute(tableConf)
